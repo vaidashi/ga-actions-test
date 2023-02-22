@@ -32,6 +32,7 @@ jobs:
 
     # Alternative option - authentication via credentials json
     - id: 'auth'
+      name: 'Authenticate to gcp'
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
