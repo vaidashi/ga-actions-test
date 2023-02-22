@@ -19,39 +19,39 @@ jobs:
       id-token: 'write'
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    # Configure Workload Identity Federation and generate an access token.
-#     - id: 'auth'
-#       name: 'Authenticate to Google Cloud'
-#       uses: 'google-github-actions/auth@v1'
-#       with:
-#         workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-#         service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+      # Configure Workload Identity Federation and generate an access token.
+  #     - id: 'auth'
+  #       name: 'Authenticate to Google Cloud'
+  #       uses: 'google-github-actions/auth@v1'
+  #       with:
+  #         workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+  #         service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
 
-    # Alternative option - authentication via credentials json
-    - id: 'auth'
-      name: 'Authenticate to gcp'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+      # Alternative option - authentication via credentials json
+      - id: 'auth'
+        name: 'Authenticate to gcp'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-    # Setup gcloud CLI
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
+      # Setup gcloud CLI
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
 
-    - name: Authorize Docker push
-      run: gcloud auth configure-docker
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
 
-    - name: Build and Push Container
-      run: |-
-        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} .
-        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
-    - name: Deploy to Cloud Run
-      run: |-
-        gcloud run deploy ${{ env.SERVICE }} \
-          --region ${{ env.REGION }} \
-          --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
-          --platform "managed" \
-          --quiet
+      - name: Build and Push Container
+        run: |-
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} .
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+      - name: Deploy to Cloud Run
+        run: |-
+          gcloud run deploy ${{ env.SERVICE }} \
+            --region ${{ env.REGION }} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
+            --platform "managed" \
+            --quiet
