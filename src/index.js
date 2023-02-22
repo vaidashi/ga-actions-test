@@ -1,7 +1,7 @@
 const http = require('http');
 
 function requestHandler(req, res) {
-    res.write('ok');
+    res.write('ok, this is a response from cloud run');
     res.end();
 }
 
