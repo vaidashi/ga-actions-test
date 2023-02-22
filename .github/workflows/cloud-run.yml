@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-    - example
+    - $default-branch
 
 name: Build and Deploy to Cloud Run
 env:
